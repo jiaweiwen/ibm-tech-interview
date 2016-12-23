@@ -19,7 +19,8 @@ def LongestSequence(target_grid, row_idx, col_idx, cand_seq, final_seq):
             for the current search.
 
     Output:
-        None
+        final_seq: the list of candidate sequence with the longest length
+            for the current search.
     """
 
     # If the target_grid is an empty list or not.
@@ -58,7 +59,7 @@ def LongestSequence(target_grid, row_idx, col_idx, cand_seq, final_seq):
         LongestSequence(target_grid, row_idx, col_idx + 1, cand_seq, final_seq)
     
     cand_seq.pop(-1)
-    return
+    return final_seq
 
 
 def main():
@@ -69,8 +70,7 @@ def main():
 
     start = datetime.datetime.now()
     # Determine the longest consecutive sequence of the target grid.
-    final_seq = []
-    LongestSequence(target_grid, 0, 0, [], final_seq)
+    final_seq = LongestSequence(target_grid, 0, 0, [], [])
     end = datetime.datetime.now()
 
     print 'The longest consecutive sequence is ', final_seq
