@@ -4,6 +4,7 @@ top left conner of the 2-d grid.
 To run this script in command: $python find_longest_path.py 
 Sample input files: input_test.txt
 """
+import datetime
 
 def LongestSequence(target_grid, row_idx, col_idx, cand_seq, final_seq):
     """
@@ -18,8 +19,7 @@ def LongestSequence(target_grid, row_idx, col_idx, cand_seq, final_seq):
             for the current search.
 
     Output:
-        final_seq: the list of candidate sequence with the longest length
-            for the current search.
+        None
     """
 
     # If the target_grid is an empty list or not.
@@ -33,37 +33,32 @@ def LongestSequence(target_grid, row_idx, col_idx, cand_seq, final_seq):
 
     # Determine if we have found a new consecutive path with longer length.
     if len(cand_seq) > len(final_seq):
-        final_seq = list(cand_seq)
+        del final_seq[:]
+        for cand in cand_seq:
+            final_seq.append(cand)
 
     # Search on the up direction.
     if row_idx > 0 and (target_grid[row_idx - 1][col_idx] == 
                         target_grid[row_idx][col_idx] + 1):
-        final_seq = LongestSequence(target_grid, row_idx - 1, col_idx, 
-                                    cand_seq, final_seq)
-        cand_seq.pop(-1)
+        LongestSequence(target_grid, row_idx - 1, col_idx, cand_seq, final_seq)
         
     # Search on the down direction.
     if row_idx < row_len - 1 and (target_grid[row_idx + 1][col_idx] == 
                                   target_grid[row_idx][col_idx] + 1):
-        final_seq = LongestSequence(target_grid, row_idx + 1, col_idx, 
-                                    cand_seq, final_seq)
-        cand_seq.pop(-1)
+        LongestSequence(target_grid, row_idx + 1, col_idx, cand_seq, final_seq)
 
     # Search on the left direction.
     if col_idx > 0 and (target_grid[row_idx][col_idx - 1] == 
                         target_grid[row_idx][col_idx] + 1):
-        final_seq = LongestSequence(target_grid, row_idx, col_idx - 1, 
-                                    cand_seq, final_seq)
-        cand_seq.pop(-1)
+        LongestSequence(target_grid, row_idx, col_idx - 1, cand_seq, final_seq)
 
     # Search on the right direction.
     if col_idx < col_len - 1 and (target_grid[row_idx][col_idx + 1] == 
                                   target_grid[row_idx][col_idx] + 1):
-        final_seq = LongestSequence(target_grid, row_idx, col_idx + 1, 
-                                    cand_seq, final_seq)
-        cand_seq.pop(-1)
-
-    return final_seq
+        LongestSequence(target_grid, row_idx, col_idx + 1, cand_seq, final_seq)
+    
+    cand_seq.pop(-1)
+    return
 
 
 def main():
@@ -72,13 +67,16 @@ def main():
     with open(input_file, "r") as file:
         target_grid = [[int(x) for x in line.split(',')] for line in file]
 
+    start = datetime.datetime.now()
     # Determine the longest consecutive sequence of the target grid.
-    final_seq = LongestSequence(target_grid, 0, 0, [], [])
+    final_seq = []
+    LongestSequence(target_grid, 0, 0, [], final_seq)
+    end = datetime.datetime.now()
 
     print 'The longest consecutive sequence is ', final_seq
+    print 'Execution time is %d ms' %int((end-start).total_seconds() * 1000000)
 
 
 if __name__ == '__main__':
     main()
-
 
