@@ -99,6 +99,7 @@ def main():
         target_grid = [[int(x) for x in line.split(',')] for line in file]
 
     start = datetime.datetime.now()
+
     # Determine the longest consecutive sequence of the target grid.
     LongestSequence(target_grid, 0, 0, [])
     
